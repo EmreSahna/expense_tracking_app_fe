@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
 import { AppState } from "../store"
 import { getCategories } from "../store/actions/categoryActions";
-import { addRecord, getRecords } from "../store/actions/recordActions";
+import { addRecord, deleteRecord, getRecords, updateRecord } from "../store/actions/recordActions";
 import { Category } from "../types/category";
 import { Mode } from "../types/general";
 import { Record, RecordForm } from "../types/record";
@@ -31,10 +31,10 @@ export default function Records() {
 
     const handleOk = () => {
         if(mode === "new") dispatch(addRecord(form) as any);
-        /*
-        else if(mode === "edit" && typeof updateId === 'number') dispatch(updateRecord(form, updateId) as any);
-        else if(mode === "delete" && typeof deleteId === 'number') dispatch(deleteRecord(deleteId) as any);
-        */
+        else if(mode === "edit" && typeof updateId === 'number') 
+            dispatch(updateRecord(form, updateId) as any);
+        else if(mode === "delete" && typeof deleteId === 'number') 
+            dispatch(deleteRecord(deleteId) as any);        
         setIsModalOpen(false);
         setMode("new");
         setForm(emptyFrom);
@@ -60,7 +60,7 @@ export default function Records() {
           title: 'Amount',
           dataIndex: 'amount',
           key: 'amount',
-          render: (amount: Record['amount'], record: Record) => {
+          render: (amount: Record['amount']) => {
             return <>{Intl.NumberFormat('tr-TR',{style: "currency", currency:"TRY"}).format(amount)}</>;
           }
         },
@@ -68,15 +68,15 @@ export default function Records() {
             title: 'Category',
             dataIndex: 'category',
             key: 'category',
-            render: (category: Category, record: Record) => {
-                return <Tag color={category.color}>{category.name.toUpperCase()}</Tag>;
+            render: (categories: Category, record: Record) => {
+                return <Tag color={categories.color}>{categories.name.toUpperCase()}</Tag>;
             }
         },
         {
             title: "Last Update",
             dataIndex: "updatedAt",
             key: "updatedAt",
-            render: (updatedAt: string, record: Record) => {
+            render: (updatedAt: string) => {
                 const date = new Date(updatedAt);
                 return <>{date.toLocaleDateString()} {date.toLocaleTimeString("tr-TR",{hour: "2-digit", minute:"2-digit"})}</>
             }
@@ -84,13 +84,22 @@ export default function Records() {
         {
           title: 'Action',
           key: 'action',
-          render: (text: string, record: Record) => (
+          render: (record: Record) => (
             <Space size="middle">
               <EditOutlined style={{ color:"blue"}} 
               onClick={() => {
+                showModal("edit");
+                setForm({
+                    title: record.title,
+                    amount: record.amount,
+                    category_id: record.category.id
+                });
+                setUpdateId(record.id);
               }} />
               <DeleteOutlined style={{ color:"red"}} 
                 onClick={() => {
+                    showModal("delete");
+                    setDeleteId(record.id);
                 }}
               />
             </Space>

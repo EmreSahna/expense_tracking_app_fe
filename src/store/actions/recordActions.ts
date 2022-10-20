@@ -22,3 +22,22 @@ export const addRecord = (form: RecordForm) => async (dispatch: RecordDispatch) 
     }
 };
 
+export const updateRecord = (form: Partial<RecordForm>, recordId: number) => async (dispatch: RecordDispatch) => {
+    dispatch({type: "UPDATE_RECORD_START"});
+    try {
+        const response = await api().put<Record>("/records/"+recordId,form);
+        dispatch({type: "UPDATE_RECORD_SUCCESS", payload: response.data})
+    } catch {
+        dispatch({type: "UPDATE_RECORD_ERROR"});
+    }
+};
+
+export const deleteRecord = (recordId: number) => async (dispatch: RecordDispatch) => {
+    dispatch({type: "DELETE_RECORD_START"});
+    try {
+        await api().delete("/records/"+recordId);
+        dispatch({type: "DELETE_RECORD_SUCCESS", payload: recordId})
+    } catch {
+        dispatch({type: "DELETE_RECORD_ERROR"});
+    }
+};
