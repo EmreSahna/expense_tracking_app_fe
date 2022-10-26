@@ -166,7 +166,7 @@ export default function Records() {
                     >
                     <Select.Option value={0} disabled>Select a category</Select.Option>
                     {categories.map(category =>{
-                        return <Select.Option value={category.id}>{category.name}</Select.Option>
+                        return <Select.Option value={category.id} key={category.id}>{category.name}</Select.Option>
                     })}
                     </Select>
                 </Form.Item>
@@ -176,7 +176,7 @@ export default function Records() {
                 ) : null}
             </Modal>
         </div>
-        <Table loading={loading} columns={columns} dataSource={data}/>
+        <Table loading={loading} columns={columns} dataSource={data} rowKey="id"/>
         </>
     )
 }

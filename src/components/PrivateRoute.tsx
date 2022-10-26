@@ -1,4 +1,4 @@
-import { Route, RouteProps, Navigate, PathRouteProps, IndexRouteProps} from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 type PrivateRouteProps = {
     component: JSX.Element

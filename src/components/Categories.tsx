@@ -124,7 +124,7 @@ export default function Categories() {
         ) : null}
         </Modal>
       </div>
-      <Table loading={loading} columns={columns} dataSource={data} />
+      <Table loading={loading} columns={columns} dataSource={data} rowKey="id"/>
     </>
   )
 }
